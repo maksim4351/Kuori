@@ -3,70 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отчет об обслуживании оборудования</title>
+    <title>Форма для сбора информации</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    
+    <!-- Подключение EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    
+    <!-- Подключение jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Отчет об обслуживании оборудования</h1>
-        <form id="equipmentForm">
-            <!-- Поля для загрузки изображений -->
-            <label>Фото первой стороны экрана:</label>
-            <input type="file" id="photo1" accept="image/*"><br>
+    <div class="form-container">
+        <h1>Сбор информации об оборудовании</h1>
+        <form id="reportForm">
+            <label for="firstScreen">Фото первой стороны экрана до обслуживания:</label>
+            <input type="file" name="firstScreen" accept="image/*" required>
 
-            <label>Фото второй стороны экрана:</label>
-            <input type="file" id="photo2" accept="image/*"><br>
+            <label for="secondScreen">Фото второго экрана до обслуживания:</label>
+            <input type="file" name="secondScreen" accept="image/*">
 
-            <label>Фото серийного номера (обязательно):</label>
-            <input type="file" id="serialNumber" accept="image/*"><br>
+            <label for="serialNumber">Фото серийного номера устройства: *</label>
+            <input type="file" name="serialNumber" accept="image/*" required>
 
-            <label>Фото электронного бокса:</label>
-            <input type="file" id="photoBox" accept="image/*"><br>
+            <label for="electronicBox">Фото электронного бокса:</label>
+            <input type="file" name="electronicBox" accept="image/*">
 
-            <label>Фото Android устройства:</label>
-            <input type="file" id="photoAndroid" accept="image/*"><br>
+            <label for="androidPhoto">Фото андроид:</label>
+            <input type="file" name="androidPhoto" accept="image/*">
 
-            <label>Фото SMB:</label>
-            <input type="file" id="photoSMB" accept="image/*"><br>
+            <label for="smbPhoto">Фото SMB:</label>
+            <input type="file" name="smbPhoto" accept="image/*">
 
-            <label>Фото видеокарты (первая сторона):</label>
-            <input type="file" id="photoVideoCard1" accept="image/*"><br>
+            <label for="videoCard1">Фото видео карты первой стороны:</label>
+            <input type="file" name="videoCard1" accept="image/*">
 
-            <label>Фото видеокарты (вторая сторона):</label>
-            <input type="file" id="photoVideoCard2" accept="image/*"><br>
+            <label for="videoCard2">Фото видео карты второй стороны:</label>
+            <input type="file" name="videoCard2" accept="image/*">
 
-            <!-- Поля текста -->
-            <label>Выявленные проблемы:</label>
-            <textarea id="problems" name="problems"></textarea><br>
+            <label for="problems">Выявленные проблемы:</label>
+            <textarea name="problems" rows="4"></textarea>
 
-            <label>Проделанная работа:</label>
-            <textarea id="workDone" name="workDone"></textarea><br>
+            <label for="workDone">Проделанная работа:</label>
+            <textarea name="workDone" rows="4"></textarea>
 
-            <label>Имя сотрудника:</label>
-            <input type="text" id="employeeName" name="employeeName"><br>
+            <label for="employeeName">Имя сотрудника:</label>
+            <input type="text" name="employeeName" required>
 
-            <!-- Поле для электронной почты -->
-            <label>Электронная почта (куда отправить отчет):</label>
-            <input type="email" id="email" name="email" required><br>
+            <label for="signature">Подпись (возможно ли расписаться?)</label>
+            <input type="text" name="signature" placeholder="Введите подпись">
 
-            <!-- Подпись -->
-            <label>Подпись:</label>
-            <canvas id="signaturePad" width="400" height="150" style="border:1px solid #000000;"></canvas><br>
-            <button type="button" id="clearSignature">Очистить подпись</button><br>
+            <label for="email">Электронная почта (куда отправить отчет): *</label>
+            <input type="email" name="email" required placeholder="Введите вашу почту">
 
-            <!-- Кнопка отправки -->
-            <button type="submit">Отправить отчет</button>
+            <button type="submit">Отправить</button>
         </form>
 
-        <!-- Уведомление об успешной отправке -->
-        <div id="notification" class="hidden">
-            <p>Отчет успешно отправлен!</p>
-        </div>
+        <div id="notification" class="hidden">Данные успешно отправлены!</div>
     </div>
 
-    <!-- Скрипт для обработки формы -->
     <script src="script.js"></script>
 </body>
 </html>
