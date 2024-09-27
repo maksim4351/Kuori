@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет об обслуживании оборудования</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Отчет об обслуживании оборудования</h1>
+        <form id="equipmentForm">
+            <!-- Поля для загрузки изображений -->
+            <label>Фото первой стороны экрана:</label>
+            <input type="file" id="photo1" accept="image/*"><br>
+
+            <label>Фото второй стороны экрана:</label>
+            <input type="file" id="photo2" accept="image/*"><br>
+
+            <label>Фото серийного номера (обязательно):</label>
+            <input type="file" id="serialNumber" accept="image/*"><br>
+
+            <label>Фото электронного бокса:</label>
+            <input type="file" id="photoBox" accept="image/*"><br>
+
+            <label>Фото Android устройства:</label>
+            <input type="file" id="photoAndroid" accept="image/*"><br>
+
+            <label>Фото SMB:</label>
+            <input type="file" id="photoSMB" accept="image/*"><br>
+
+            <label>Фото видеокарты (первая сторона):</label>
+            <input type="file" id="photoVideoCard1" accept="image/*"><br>
+
+            <label>Фото видеокарты (вторая сторона):</label>
+            <input type="file" id="photoVideoCard2" accept="image/*"><br>
+
+            <!-- Поля текста -->
+            <label>Выявленные проблемы:</label>
+            <textarea id="problems" name="problems"></textarea><br>
+
+            <label>Проделанная работа:</label>
+            <textarea id="workDone" name="workDone"></textarea><br>
+
+            <label>Имя сотрудника:</label>
+            <input type="text" id="employeeName" name="employeeName"><br>
+
+            <!-- Поле для электронной почты -->
+            <label>Электронная почта (куда отправить отчет):</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <!-- Подпись -->
+            <label>Подпись:</label>
+            <canvas id="signaturePad" width="400" height="150" style="border:1px solid #000000;"></canvas><br>
+            <button type="button" id="clearSignature">Очистить подпись</button><br>
+
+            <!-- Кнопка отправки -->
+            <button type="submit">Отправить отчет</button>
+        </form>
+
+        <!-- Уведомление об успешной отправке -->
+        <div id="notification" class="hidden">
+            <p>Отчет успешно отправлен!</p>
+        </div>
+    </div>
+
+    <!-- Скрипт для обработки формы -->
+    <script src="script.js"></script>
+</body>
+</html>
