@@ -141,13 +141,10 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("employeeName").value
         ];
 
-        let pageCount = 1;
-
         for (let i = 0; i < questions.length; i++) {
             if (yOffset > pageHeight - 30) {
                 doc.addPage();
                 yOffset = 20;
-                pageCount++;
             }
 
             doc.setFontSize(12);
@@ -171,6 +168,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         displayWidth = displayHeight * aspectRatio;
                     }
 
+                    // Проверяем, поместится ли изображение на текущую страницу
+                    if (yOffset + displayHeight > pageHeight - 30) {
+                        doc.addPage();
+                        yOffset = 20;
+                    }
+
                     const centeredX = (pageWidth - displayWidth) / 2;
                     doc.addImage(imageData, "JPEG", centeredX, yOffset, displayWidth, displayHeight);
                     yOffset += displayHeight + 5;
@@ -184,13 +187,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (i === 11) {
                 const signatureImage = signaturePad.toDataURL("image/png");
+                if (yOffset + 60 > pageHeight - 30) {
+                    doc.addPage();
+                    yOffset = 20;
+                }
                 doc.addImage(signatureImage, "PNG", 20, yOffset, 170, 60);
                 yOffset += 70;
             }
 
-            doc.line(10, yOffset, pageWidth - 10, yOffset); // Линия после каждого вопроса
+            doc.line(10, yOffset, pageWidth - 10, yOffset);
             yOffset += 10;
         }
+
+        yOffset += 20;
+        doc.setFontSize(14);
+        doc.text(documentHeader, 10, yOffset);
+        yOffset += 10;
+        doc.line(10, yOffset, pageWidth - 10, yOffset);
+        yOffset += 10;
 
         const totalPages = doc.internal.getNumberOfPages();
         for (let i = 1; i <= totalPages; i++) {
@@ -199,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
             doc.text(`Page ${i} of ${totalPages}`, pageWidth / 2 - 20, pageHeight - 10);
         }
 
-        doc.save(fileName);
+        const blob = doc.output("blob");
+        saveAs(blob, fileName);
     });
 
     function getBase64(file) {
@@ -232,9 +247,4 @@ document.addEventListener("DOMContentLoaded", () => {
             img.src = imageData;
         });
     }
-
-    window.takePhoto = function(inputId) {
-        const fileInput = document.getElementById(inputId);
-        fileInput.click();
-    };
 });
