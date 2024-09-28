@@ -6,8 +6,7 @@
     <title>Service Report</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -23,40 +22,56 @@
         <h3>Employee Name</h3>
         <input type="text" id="employeeName" placeholder="Enter your name...">
 
-        <!-- Вопросы с кнопками загрузки файлов и фотографирования -->
-        <h3>1. Photo of the first side of the screen before servicing:</h3>
-        <input type="file" id="screenPhoto1" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('screenPhoto1')">Take Photo</button>
-        
-        <h3>2. Photo of the second side of the screen before servicing:</h3>
-        <input type="file" id="screenPhoto2" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('screenPhoto2')">Take Photo</button>
-        
-        <h3>3. Photo of the device serial number (must include an asterisk):</h3>
-        <input type="file" id="serialNumberPhoto" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('serialNumberPhoto')">Take Photo</button>
-        
-        <h3>4. Photo of the electronic box:</h3>
-        <input type="file" id="electronicBoxPhoto" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('electronicBoxPhoto')">Take Photo</button>
-        
-        <h3>5. Photo of the Android system:</h3>
-        <input type="file" id="androidPhoto" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('androidPhoto')">Take Photo</button>
-        
-        <h3>6. Photo of the SMB:</h3>
-        <input type="file" id="smbPhoto" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('smbPhoto')">Take Photo</button>
-        
-        <h3>7. Photo of the first side of the video card:</h3>
-        <input type="file" id="videoCard1Photo" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('videoCard1Photo')">Take Photo</button>
-        
-        <h3>8. Photo of the second side of the video card:</h3>
-        <input type="file" id="videoCard2Photo" accept="image/*" class="file-input">
-        <button class="take-photo-btn" onclick="takePhoto('videoCard2Photo')">Take Photo</button>
+        <!-- Вопросы с полями загрузки -->
+        <h3>Upload Photos</h3>
+        <label for="screenPhoto1">1. Photo of the first side of the screen before servicing:</label>
+        <div>
+            <input type="file" id="screenPhoto1">
+            <button type="button" onclick="takePhoto('screenPhoto1')">Take Photo</button>
+        </div>
 
-        <!-- Подпись -->
+        <label for="screenPhoto2">2. Photo of the second side of the screen before servicing:</label>
+        <div>
+            <input type="file" id="screenPhoto2">
+            <button type="button" onclick="takePhoto('screenPhoto2')">Take Photo</button>
+        </div>
+
+        <label for="serialNumberPhoto">3. Photo of the device serial number (must include an asterisk):</label>
+        <div>
+            <input type="file" id="serialNumberPhoto">
+            <button type="button" onclick="takePhoto('serialNumberPhoto')">Take Photo</button>
+        </div>
+
+        <label for="electronicBoxPhoto">4. Photo of the electronic box:</label>
+        <div>
+            <input type="file" id="electronicBoxPhoto">
+            <button type="button" onclick="takePhoto('electronicBoxPhoto')">Take Photo</button>
+        </div>
+
+        <label for="androidPhoto">5. Photo of the Android system:</label>
+        <div>
+            <input type="file" id="androidPhoto">
+            <button type="button" onclick="takePhoto('androidPhoto')">Take Photo</button>
+        </div>
+
+        <label for="smbPhoto">6. Photo of the SMB:</label>
+        <div>
+            <input type="file" id="smbPhoto">
+            <button type="button" onclick="takePhoto('smbPhoto')">Take Photo</button>
+        </div>
+
+        <label for="videoCard1Photo">7. Photo of the first side of the video card:</label>
+        <div>
+            <input type="file" id="videoCard1Photo">
+            <button type="button" onclick="takePhoto('videoCard1Photo')">Take Photo</button>
+        </div>
+
+        <label for="videoCard2Photo">8. Photo of the second side of the video card:</label>
+        <div>
+            <input type="file" id="videoCard2Photo">
+            <button type="button" onclick="takePhoto('videoCard2Photo')">Take Photo</button>
+        </div>
+
         <div id="signatureContainer">
             <h3>Signature</h3>
             <canvas id="signaturePad" width="500" height="200"></canvas>
@@ -67,7 +82,6 @@
         <!-- Кнопка сохранения PDF -->
         <button id="savePdfBtn">Save PDF Report</button>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
