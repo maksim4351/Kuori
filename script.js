@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => { 
+document.addEventListener("DOMContentLoaded", () => {
     const { jsPDF } = window.jspdf;
 
     const signaturePad = document.getElementById("signaturePad");
@@ -23,14 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const horizontalQuestions = [2, 3, 4, 5, 6, 7];
 
-    // Обработка кнопки Take Photo и добавление capture
     imageInputs.forEach((input, index) => {
         if (horizontalQuestions.includes(index)) {
             input.addEventListener("change", () => validateImageOrientation(input, index));
         }
-        // Добавляем атрибут capture для камер на телефоне
         input.setAttribute("accept", "image/*");
-        input.setAttribute("capture", "camera");
     });
 
     function validateImageOrientation(input, index) {
@@ -202,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
             yOffset += 10;
         }
 
-        // Дублируем шапку в конце документа
         yOffset += 20;
         doc.setFontSize(14);
         doc.text(documentHeader, 10, yOffset);
@@ -221,9 +217,43 @@ document.addEventListener("DOMContentLoaded", () => {
         saveAs(blob, fileName);
     });
 
+    // Функция для получения элемента input по индексу
+    function getFileInputByIndex(index) {
+        switch (index) {
+            case 0: return document.getElementById("screenPhoto1");
+            case 1: return document.getElementById("screenPhoto2");
+            case 2: return document.getElementById("serialNumberPhoto");
+            case 3: return document.getElementById("electronicBoxPhoto");
+            case 4: return document.getElementById("androidPhoto");
+            case 5: return document.getElementById("smbPhoto");
+            case 6: return document.getElementById("videoCard1Photo");
+            case 7: return document.getElementById("videoCard2Photo");
+            default: return null;
+        }
+    }
+
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function getImageDimensions(imageData) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve({ width: img.width, height: img.height });
+            img.src = imageData;
+        });
+    }
+
     // Глобальное определение функции takePhoto
     window.takePhoto = function(inputId) {
         const fileInput = document.getElementById(inputId);
-        fileInput.click(); // Открыть камеру или файловый менеджер для выбора фото
+        fileInput.setAttribute("capture", "camera"); // Включаем только при вызове
+        fileInput.click();
+        fileInput.removeAttribute("capture"); // Отключаем, чтобы кнопка "Выберите файл" не открывала камеру
     };
 });
