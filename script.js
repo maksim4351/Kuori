@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         displayWidth = displayHeight * aspectRatio;
                     }
 
-                    // Проверяем, поместится ли изображение на текущую страницу
+                    // Проверка и перенос изображения на новую страницу, если оно не помещается
                     if (yOffset + displayHeight > pageHeight - 30) {
                         doc.addPage();
                         yOffset = 20;
