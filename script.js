@@ -221,34 +221,9 @@ document.addEventListener("DOMContentLoaded", () => {
         saveAs(blob, fileName);
     });
 
-    function getBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function getFileInputByIndex(index) {
-        switch (index) {
-            case 0: return document.getElementById("screenPhoto1");
-            case 1: return document.getElementById("screenPhoto2");
-            case 2: return document.getElementById("serialNumberPhoto");
-            case 3: return document.getElementById("electronicBoxPhoto");
-            case 4: return document.getElementById("androidPhoto");
-            case 5: return document.getElementById("smbPhoto");
-            case 6: return document.getElementById("videoCard1Photo");
-            case 7: return document.getElementById("videoCard2Photo");
-            default: return null;
-        }
-    }
-
-    function getImageDimensions(imageData) {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve({ width: img.width, height: img.height });
-            img.src = imageData;
-        });
-    }
+    // Глобальное определение функции takePhoto
+    window.takePhoto = function(inputId) {
+        const fileInput = document.getElementById(inputId);
+        fileInput.click(); // Открыть камеру или файловый менеджер для выбора фото
+    };
 });
