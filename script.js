@@ -23,10 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const horizontalQuestions = [2, 3, 4, 5, 6, 7];
 
+    // Обработка кнопки Take Photo и добавление capture
     imageInputs.forEach((input, index) => {
         if (horizontalQuestions.includes(index)) {
             input.addEventListener("change", () => validateImageOrientation(input, index));
         }
+        // Добавляем атрибут capture для камер на телефоне
+        input.setAttribute("accept", "image/*");
+        input.setAttribute("capture", "camera");
     });
 
     function validateImageOrientation(input, index) {
@@ -168,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         displayWidth = displayHeight * aspectRatio;
                     }
 
-                    // Проверка и перенос изображения на новую страницу, если оно не помещается
                     if (yOffset + displayHeight > pageHeight - 30) {
                         doc.addPage();
                         yOffset = 20;
@@ -199,6 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
             yOffset += 10;
         }
 
+        // Дублируем шапку в конце документа
         yOffset += 20;
         doc.setFontSize(14);
         doc.text(documentHeader, 10, yOffset);
