@@ -1,26 +1,13 @@
-[
-    {
-        "serialNumber": "IO024554B5C003324001",
-        "androidSerial": "KIVI00007320",
-        "address": "Rautatientori",
-        "coordinates": "60°10'15.3"N 24°56'41.0"E",
-        "spare1": "n/a",
-        "spare2": "n/a"
-    },
-    {
-        "serialNumber": "IO024554B5C003324002",
-        "androidSerial": "KIVI00007320",
-        "address": "Rautatientori",
-        "coordinates": "60°10'15.3"N 24°56'41.0"E",
-        "spare1": "n/a",
-        "spare2": "n/a"
-    },
-    {
-        "serialNumber": "IO024554B5C003324003",
-        "androidSerial": "KIVI00007320",
-        "address": "Rautatientori",
-        "coordinates": "60°10'15.3"N 24°56'41.0"E",
-        "spare1": "n/a",
-        "spare2": "n/a"
-    }
+{
+  "action": "add",
+  "device": {
+    "serialNumber": "IO024554B5C003324001",
+    "androidSerial": "11",
+    "address": "111",
+    "coordinates": "111",
+    "spare1": "Data",
+    "spare2": "More Data"
+  }
+}
+
 ]
