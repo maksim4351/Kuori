@@ -1,0 +1,18 @@
+[
+    {
+        "serialNumber": "IO024554B5C003324001",
+        "androidSerial": "54321",
+        "address": "123 Main St, City",
+        "coordinates": "34.0522 N, 118.2437 W",
+        "spare1": "Spare Data",
+        "spare2": "Spare Data"
+    },
+    {
+        "serialNumber": "IO024554B5C003324002",
+        "androidSerial": "09876",
+        "address": "456 Oak St, Town",
+        "coordinates": "40.7128 N, 74.0060 W",
+        "spare1": "Spare Data",
+        "spare2": "Spare Data"
+    }
+]

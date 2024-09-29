@@ -21,16 +21,32 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("videoCard2Photo"),
     ];
 
-    const horizontalQuestions = [2, 3, 4, 5, 6, 7];
+    const takePhotoButtons = [
+        document.getElementById("takePhoto1"),
+        document.getElementById("takePhoto2"),
+        document.getElementById("takePhoto3"),
+        document.getElementById("takePhoto4"),
+        document.getElementById("takePhoto5"),
+        document.getElementById("takePhoto6"),
+        document.getElementById("takePhoto7"),
+        document.getElementById("takePhoto8"),
+    ];
 
+    const horizontalQuestions = [2, 3, 4, 5, 6, 7]; // Вопросы, которые должны содержать горизонтальные изображения
+
+    // Обработчики для каждого поля ввода
     imageInputs.forEach((input, index) => {
+        const button = takePhotoButtons[index];
         if (horizontalQuestions.includes(index)) {
-            input.addEventListener("change", () => validateImageOrientation(input, index));
+            input.addEventListener("change", () => validateImageOrientation(input, button));
+        } else {
+            input.addEventListener("change", () => updateButtonState(input, button));
         }
         input.setAttribute("accept", "image/*");
     });
 
-    function validateImageOrientation(input, index) {
+    // Функция для проверки ориентации изображения и обновления кнопки
+    function validateImageOrientation(input, button) {
         if (input.files && input.files[0]) {
             const file = input.files[0];
             const reader = new FileReader();
@@ -40,8 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 img.onload = () => {
                     const aspectRatio = img.width / img.height;
                     if (aspectRatio < 1) {
-                        alert(`Only horizontal images are allowed for question ${index + 3}. Please upload a horizontal photo.`);
-                        input.value = "";
+                        alert("Only horizontal images are allowed. Please upload a horizontal photo.");
+                        input.value = ""; // Очищаем значение input, если изображение вертикальное
+                        updateButtonState(input, button); // Обновляем состояние кнопки (красный цвет)
+                    } else {
+                        updateButtonState(input, button); // Изображение горизонтальное — обновляем кнопку (зелёный цвет)
                     }
                 };
                 img.src = e.target.result;
@@ -50,6 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Функция для обновления состояния кнопки
+    function updateButtonState(input, button) {
+        if (input.files && input.files.length > 0) {
+            button.style.backgroundColor = "green"; // Изображение добавлено — кнопка зелёная
+            button.classList.add("has-photo");
+        } else {
+            button.style.backgroundColor = "red"; // Изображение не добавлено — кнопка красная
+            button.classList.remove("has-photo");
+        }
+    }
+
+    // События для подписи
     signaturePad.addEventListener("mousedown", startDrawing);
     signaturePad.addEventListener("mouseup", stopDrawing);
     signaturePad.addEventListener("mousemove", draw);
@@ -252,8 +283,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Глобальное определение функции takePhoto
     window.takePhoto = function(inputId) {
         const fileInput = document.getElementById(inputId);
-        fileInput.setAttribute("capture", "camera"); // Включаем только при вызове
+        fileInput.setAttribute("capture", "camera");
         fileInput.click();
-        fileInput.removeAttribute("capture"); // Отключаем, чтобы кнопка "Выберите файл" не открывала камеру
+        fileInput.removeAttribute("capture");
     };
 });

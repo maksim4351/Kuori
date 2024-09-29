@@ -3,84 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Report</title>
+    <title>Service Report Form</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+	
 </head>
 <body>
     <div class="container">
+        <!-- Ссылка на страницу списка устройств вверху -->
+        <div class="top-nav">
+            <a href="device-list.html" class="nav-link">Device List</a>
+        </div>
+
         <h1>Service Report Form</h1>
         <h2>Fill in the details and generate your report</h2>
 
-        <h3>Detected Issues</h3>
-        <textarea id="detectedIssues" placeholder="Describe any detected issues..."></textarea>
-
-        <h3>Work Performed</h3>
-        <textarea id="workDone" placeholder="Describe the work performed..."></textarea>
-
-        <h3>Employee Name</h3>
-        <input type="text" id="employeeName" placeholder="Enter your name...">
-
-        <!-- Вопросы с полями загрузки -->
-        <h3>Upload Photos</h3>
-        <label for="screenPhoto1">1. Photo of the first side of the screen before servicing:</label>
-        <div>
-            <input type="file" id="screenPhoto1">
-            <button type="button" onclick="takePhoto('screenPhoto1')">Take Photo</button>
+        <!-- Ввод полей для вопросов с кнопками Take Photo -->
+        <div class="input-group">
+            <label for="screenPhoto1">1. Photo of the first side of the screen before servicing:</label>
+            <div class="button-container">
+                <input type="file" id="screenPhoto1" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto1" onclick="takePhoto('screenPhoto1')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="screenPhoto2">2. Photo of the second side of the screen before servicing:</label>
-        <div>
-            <input type="file" id="screenPhoto2">
-            <button type="button" onclick="takePhoto('screenPhoto2')">Take Photo</button>
+        <div class="input-group">
+            <label for="screenPhoto2">2. Photo of the second side of the screen before servicing:</label>
+            <div class="button-container">
+                <input type="file" id="screenPhoto2" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto2" onclick="takePhoto('screenPhoto2')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="serialNumberPhoto">3. Photo of the device serial number (must include an asterisk):</label>
-        <div>
-            <input type="file" id="serialNumberPhoto">
-            <button type="button" onclick="takePhoto('serialNumberPhoto')">Take Photo</button>
+        <div class="input-group">
+            <label for="serialNumberPhoto">3. Photo of the device serial number (must include an asterisk):</label>
+            <div class="button-container">
+                <input type="file" id="serialNumberPhoto" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto3" onclick="takePhoto('serialNumberPhoto')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="electronicBoxPhoto">4. Photo of the electronic box:</label>
-        <div>
-            <input type="file" id="electronicBoxPhoto">
-            <button type="button" onclick="takePhoto('electronicBoxPhoto')">Take Photo</button>
+        <div class="input-group">
+            <label for="electronicBoxPhoto">4. Photo of the electronic box:</label>
+            <div class="button-container">
+                <input type="file" id="electronicBoxPhoto" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto4" onclick="takePhoto('electronicBoxPhoto')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="androidPhoto">5. Photo of the Android system:</label>
-        <div>
-            <input type="file" id="androidPhoto">
-            <button type="button" onclick="takePhoto('androidPhoto')">Take Photo</button>
+        <div class="input-group">
+            <label for="androidPhoto">5. Photo of the Android system:</label>
+            <div class="button-container">
+                <input type="file" id="androidPhoto" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto5" onclick="takePhoto('androidPhoto')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="smbPhoto">6. Photo of the SMB:</label>
-        <div>
-            <input type="file" id="smbPhoto">
-            <button type="button" onclick="takePhoto('smbPhoto')">Take Photo</button>
+        <div class="input-group">
+            <label for="smbPhoto">6. Photo of the SMB:</label>
+            <div class="button-container">
+                <input type="file" id="smbPhoto" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto6" onclick="takePhoto('smbPhoto')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="videoCard1Photo">7. Photo of the first side of the video card:</label>
-        <div>
-            <input type="file" id="videoCard1Photo">
-            <button type="button" onclick="takePhoto('videoCard1Photo')">Take Photo</button>
+        <div class="input-group">
+            <label for="videoCard1Photo">7. Photo of the first side of the video card:</label>
+            <div class="button-container">
+                <input type="file" id="videoCard1Photo" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto7" onclick="takePhoto('videoCard1Photo')">Take Photo</button>
+            </div>
         </div>
 
-        <label for="videoCard2Photo">8. Photo of the second side of the video card:</label>
-        <div>
-            <input type="file" id="videoCard2Photo">
-            <button type="button" onclick="takePhoto('videoCard2Photo')">Take Photo</button>
+        <div class="input-group">
+            <label for="videoCard2Photo">8. Photo of the second side of the video card:</label>
+            <div class="button-container">
+                <input type="file" id="videoCard2Photo" class="file-input">
+                <button type="button" class="take-photo-btn" id="takePhoto8" onclick="takePhoto('videoCard2Photo')">Take Photo</button>
+            </div>
         </div>
 
-        <div id="signatureContainer">
-            <h3>Signature</h3>
-            <canvas id="signaturePad" width="500" height="200"></canvas>
-            <br>
-            <button id="clearSignature">Clear Signature</button>
+        <!-- Текстовые поля для вопросов 9, 10 и 11 -->
+        <div class="input-group">
+            <label for="detectedIssues">9. Detected issues:</label>
+            <textarea id="detectedIssues" placeholder="Describe any detected issues..."></textarea>
         </div>
+
+        <div class="input-group">
+            <label for="workDone">10. Work performed:</label>
+            <textarea id="workDone" placeholder="Describe the work performed..."></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="employeeName">11. Employee name:</label>
+            <input type="text" id="employeeName" placeholder="Enter your name...">
+        </div>
+
+        <!-- Поле и кнопка для подписи -->
+        <div id="signatureContainer" class="input-group">
+    <label>12. Signature:</label>
+    <br>
+    <canvas id="signaturePad" width="500" height="200"></canvas>
+    <br>
+    <div class="button-container">
+        <button id="clearSignature" class="clear-signature-btn">Clear Signature</button>
+    </div>
+</div>
 
         <!-- Кнопка сохранения PDF -->
-        <button id="savePdfBtn">Save PDF Report</button>
+        <!-- Кнопка сохранения PDF -->
+<button id="savePdfBtn" class="save-pdf-btn">Save PDF Report</button>
+<!-- Ссылка на страницу списка устройств внизу -->
+        <div class="bottom-nav">
+            <a href="device-list.html" class="nav-link">Device List</a>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

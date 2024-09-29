@@ -8,89 +8,277 @@ body, html {
     height: 100%;
 }
 
-/* Контейнер */
 .container {
     width: 80%;
     margin: auto;
     padding: 20px;
-    background-color: #23272a; /* Более тёмный фон для контейнера */
+    background-color: #23272a;
     border-radius: 15px; /* Округлые углы контейнера */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень для контейнера */
 }
 
-/* Заголовки */
 h1, h2, h3 {
-    color: #ffffff; /* Белый цвет заголовков */
-    text-align: left;
+    color: #ffffff;
+    text-align: center;
 }
 
-/* Поля ввода */
-input[type="text"], textarea {
+/* Стили для групп элементов */
+.input-group {
+    margin-bottom: 20px;
+}
+
+/* Обёртка для кнопок и полей ввода */
+.button-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.button-container input[type="file"] {
+    margin-right: 10px;
+}
+
+.take-photo-btn {
+    border-radius: 25px;
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.take-photo-btn.has-photo {
+    background-color: green;
+}
+
+.take-photo-btn:hover {
+    background-color: #ff7b7b;
+}
+
+textarea, input[type="text"] {
     width: 100%;
     padding: 10px;
-    margin: 10px 0 20px 0;
     border: 1px solid #ddd;
-    border-radius: 10px; /* Округлые углы */
+    border-radius: 10px;
     background-color: #40444b; /* Темно-серый фон полей */
-    color: #ffffff; /* Цвет текста в полях */
+    color: #ffffff;
 }
 
-textarea {
-    height: 100px; /* Высота поля textarea */
+/* Область для подписи */
+#signaturePad {
+    border: 2px dashed #ddd; /* Пунктирная граница */
+    background-color: #40444b; /* Темно-серый фон области подписи */
+    border-radius: 10px;
+    display: block;
+    margin: 10px 0; /* Отступы сверху и снизу */
 }
 
-/* Стили для кнопок */
-button, .file-input, .take-photo-btn {
-    background-color: #333333; /* Тёмно-серый цвет кнопок */
-    color: #ffffff; /* Белый цвет текста на кнопке */
+/* Контейнер для подписи */
+#signatureContainer {
+    text-align: left; /* Выравнивание по левому краю */
+    margin: 20px 0;
+}
+
+/* Метка подписи */
+#signatureContainer label {
+    display: block; /* Размещаем метку отдельно от подписи */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+/* Стили для кнопки Clear Signature */
+#clearSignature {
+    background-color: #ffcccc; /* Светло-красный цвет */
+    color: #333; /* Темно-серый текст */
     border: none;
-    padding: 12px 25px;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 25px; /* Округлые углы */
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 0; /* По левому краю */
+}
+
+/* Эффект наведения на кнопку Clear Signature */
+#clearSignature:hover {
+    background-color: #ff9999; /* Темнее при наведении */
+}
+
+/* Эффект нажатия на кнопку Clear Signature */
+#clearSignature:active {
+    transform: translateY(3px); /* Сдвиг вниз при нажатии */
+    background-color: #ff6666; /* Ещё более тёмный оттенок */
+}
+
+/* Стили для кнопки Save PDF */
+.save-pdf-btn {
+    background-color: #333333; /* Тёмно-серый цвет кнопки */
+    color: #ffffff; /* Белый цвет текста */
+    border: none;
+    padding: 15px 30px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
     border-radius: 25px; /* Округлые кнопки */
-    transition: background-color 0.3s ease, transform 0.1s ease; /* Плавный переход */
+    transition: background-color 0.3s ease, transform 0.1s ease;
     cursor: pointer;
-    margin-bottom: 20px;
+    margin-top: 20px; /* Отступ сверху */
 }
 
-.take-photo-btn {
-    margin-left: 10px; /* Отступ для кнопки фотографирования */
-}
-
-/* Эффект наведения на кнопки */
-button:hover, .file-input:hover, .take-photo-btn:hover {
+/* Эффект наведения на кнопку Save PDF */
+.save-pdf-btn:hover {
     background-color: #555555; /* Светло-серый цвет при наведении */
 }
 
-button:active, .file-input:active, .take-photo-btn:active {
+/* Эффект нажатия на кнопку Save PDF */
+.save-pdf-btn:active {
     transform: translateY(3px); /* Сдвиг вниз при нажатии */
     background-color: #444444; /* Более тёмный оттенок */
 }
-
-/* Область для рисования подписи */
-#signaturePad {
-    border: 2px dashed #ddd;
-    background-color: #40444b; /* Темно-серый фон области подписи */
-    border-radius: 10px;
+/* Основные стили */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #2c2f33;
+    color: #dcdcdc;
 }
 
-#signatureContainer {
+/* Контейнер */
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #23272a;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Заголовки */
+h1, h2 {
     text-align: center;
+}
+
+/* Навигационные ссылки */
+.top-nav, .bottom-nav {
+    text-align: right;
+    margin: 10px 0;
+}
+
+.nav-link {
+    color: #7289da; /* Синий цвет */
+    text-decoration: none;
+    font-weight: bold;
+    margin: 10px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #99a9ff; /* Светло-синий при наведении */
+}
+
+/* Основные стили таблицы и формы */
+table {
+    width: 100%;
+    border-collapse: collapse;
     margin: 20px 0;
 }
 
-/* Кнопки управления областью подписи */
-#clearSignature {
-    background-color: #ff5555; /* Красный цвет кнопки очистки */
+table, th, td {
+    border: 1px solid #555;
 }
 
-#clearSignature:hover {
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+th {
+    background-color: #40444b;
+    color: #ffffff;
+}
+
+tr:nth-child(even) {
+    background-color: #2c2f33;
+}
+
+#addDeviceForm {
+    margin: 20px 0;
+}
+
+#addDeviceForm input {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #40444b;
+    color: #ffffff;
+}
+
+#addDeviceBtn {
+    background-color: #7289da;
+    border: none;
+    padding: 10px 20px;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#addDeviceBtn:hover {
+    background-color: #99a9ff;
+}
+
+#addDeviceBtn:active {
+    transform: translateY(2px);
+    background-color: #6271b6;
+}
+
+/* Стили для кнопки сохранения CSV */
+.save-csv-btn {
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.save-csv-btn:hover {
+    background-color: #555555;
+}
+
+.save-csv-btn:active {
+    transform: translateY(3px);
+    background-color: #444444;
+}
+
+}
+/* Стили для кнопки Delete */
+.delete-btn {
+    background-color: #ff5555; /* Красный цвет */
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
     background-color: #ff7b7b; /* Светло-красный при наведении */
 }
 
-#clearSignature:active {
+.delete-btn:active {
     transform: translateY(2px);
-    background-color: #ff4040; /* Более темный красный при нажатии */
+    background-color: #ff4040; /* Темнее при нажатии */
 }
