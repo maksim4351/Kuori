@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const addDeviceBtn = document.getElementById("addDeviceBtn");
     let devices = [];
 
-    // Загружаем устройства из файла при старте
-    loadDeviceListFromFile();
+    // Загружаем устройства из localStorage или файла при старте
+    loadDeviceListFromStorage();
 
     // Обработчик добавления нового устройства
     addDeviceBtn.addEventListener("click", () => {
@@ -21,31 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
         sortDevices();
         renderTable();
         document.getElementById("addDeviceForm").reset();
-        saveDeviceListToFile();
+        saveDeviceListToStorage();
     });
 
     // Обработчик для удаления строк
     tableBody.addEventListener("click", (event) => {
         if (event.target.classList.contains("delete-btn")) {
-            deleteTarget = event.target.closest("tr").getAttribute('data-id');
-            document.getElementById("confirmDeleteModal").style.display = "block";
-        }
-    });
-
-    // Показ модального окна при удалении
-    let deleteTarget = null;
-    document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
-        if (deleteTarget !== null) {
-            devices = devices.filter((_, index) => index.toString() !== deleteTarget);
-            deleteTarget = null;
+            const deleteIndex = event.target.closest("tr").getAttribute('data-id');
+            devices.splice(deleteIndex, 1); // Удаляем элемент из массива
             renderTable();
-            saveDeviceListToFile();
-            document.getElementById("confirmDeleteModal").style.display = "none";
+            saveDeviceListToStorage();
         }
-    });
-
-    document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
-        document.getElementById("confirmDeleteModal").style.display = "none";
     });
 
     // Переключение режима редактирования при нажатии кнопки Edit
@@ -63,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     cell.classList.remove("editing-cell");
                 }
             }
-            saveDeviceListToFile();
+            saveDeviceListToStorage();
         }
     });
 
@@ -93,22 +79,30 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Сохранение списка устройств в JSON файл
-    function saveDeviceListToFile() {
-        const deviceList = JSON.stringify(devices, null, 2);
-        const blob = new Blob([deviceList], { type: 'application/json' });
-        saveAs(blob, 'device_list.json');
+    // Сохранение списка устройств в localStorage
+    function saveDeviceListToStorage() {
+        localStorage.setItem('deviceList', JSON.stringify(devices));
     }
 
-    // Загрузка списка устройств из файла JSON
-    function loadDeviceListFromFile() {
-        fetch('device_list.json')
-            .then(response => response.json())
-            .then(data => {
-                devices = data;
-                sortDevices();
-                renderTable();
-            })
-            .catch(error => console.error("Error loading device list:", error));
+    // Загрузка списка устройств из localStorage или из JSON-файла
+    function loadDeviceListFromStorage() {
+        // Загружаем из localStorage, если данные есть
+        const savedDevices = localStorage.getItem('deviceList');
+        if (savedDevices) {
+            devices = JSON.parse(savedDevices);
+            sortDevices();
+            renderTable();
+        } else {
+            // Если данных в localStorage нет, загружаем из файла JSON
+            fetch('device_list.json')
+                .then(response => response.json())
+                .then(data => {
+                    devices = data;
+                    sortDevices();
+                    renderTable();
+                    saveDeviceListToStorage(); // Сохраняем в localStorage для последующих сеансов
+                })
+                .catch(error => console.error("Error loading device list:", error));
+        }
     }
 });
