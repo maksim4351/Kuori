@@ -1,18 +1,26 @@
 [
     {
         "serialNumber": "IO024554B5C003324001",
-        "androidSerial": "54321",
-        "address": "123 Main St, City",
-        "coordinates": "34.0522 N, 118.2437 W",
-        "spare1": "Spare Data",
-        "spare2": "Spare Data"
+        "androidSerial": "KIVI00007320",
+        "address": "Rautatientori",
+        "coordinates": "60°10'15.3"N 24°56'41.0"E",
+        "spare1": "n/a",
+        "spare2": "n/a"
     },
     {
         "serialNumber": "IO024554B5C003324002",
-        "androidSerial": "09876",
-        "address": "456 Oak St, Town",
-        "coordinates": "40.7128 N, 74.0060 W",
-        "spare1": "Spare Data",
-        "spare2": "Spare Data"
+        "androidSerial": "KIVI00007320",
+        "address": "Rautatientori",
+        "coordinates": "60°10'15.3"N 24°56'41.0"E",
+        "spare1": "n/a",
+        "spare2": "n/a"
+    },
+    {
+        "serialNumber": "IO024554B5C003324003",
+        "androidSerial": "KIVI00007320",
+        "address": "Rautatientori",
+        "coordinates": "60°10'15.3"N 24°56'41.0"E",
+        "spare1": "n/a",
+        "spare2": "n/a"
     }
 ]
