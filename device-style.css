@@ -1,37 +1,37 @@
-/* Основные стили */
+
 body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #2c2f33; /* Темно-серый фон */
-    color: #dcdcdc; /* Светло-серый текст */
+    background-color: #2c2f33; 
+    color: #dcdcdc; 
     height: 100%;
 }
 
-/* Контейнер */
+
 .container {
     width: 80%;
     margin: auto;
     padding: 20px;
-    background-color: #23272a; /* Более тёмный фон для контейнера */
-    border-radius: 15px; /* Округлые углы контейнера */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Тень для контейнера */
+    background-color: #23272a; 
+    border-radius: 15px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
 }
 
-/* Заголовки */
+
 h1, h2, h3 {
     text-align: center;
-    color: #ffffff; /* Белый цвет заголовков */
+    color: #ffffff; 
 }
 
-/* Навигационные ссылки */
+
 .top-nav, .bottom-nav {
     text-align: right;
     margin: 10px 0;
 }
 
 .nav-link {
-    color: #7289da; /* Синий цвет */
+    color: #7289da; 
     text-decoration: none;
     font-weight: bold;
     margin: 10px;
@@ -39,10 +39,10 @@ h1, h2, h3 {
 }
 
 .nav-link:hover {
-    color: #99a9ff; /* Светло-синий при наведении */
+    color: #99a9ff; 
 }
 
-/* Стили таблицы */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -50,7 +50,7 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #555; /* Граница таблицы */
+    border: 1px solid #555; 
 }
 
 th, td {
@@ -59,18 +59,18 @@ th, td {
 }
 
 th {
-    background-color: #40444b; /* Фон заголовков таблицы */
-    color: #ffffff; /* Белый цвет текста в заголовках */
+    background-color: #40444b; 
+    color: #ffffff; 
 }
 
 tr:nth-child(even) {
-    background-color: #2c2f33; /* Полосатый фон для четных строк */
+    background-color: #2c2f33; 
 }
 
-/* Стили для строки ввода новых данных */
+
 #addDeviceForm {
     margin: 20px 0;
-    text-align: center; /* Центрируем форму */
+    text-align: center; 
 }
 
 #addDeviceForm input {
@@ -78,7 +78,7 @@ tr:nth-child(even) {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #40444b; /* Темно-серый фон полей ввода */
+    background-color: #40444b; 
     color: #ffffff;
 }
 
@@ -89,21 +89,21 @@ tr:nth-child(even) {
     color: #ffffff;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.1s ease; /* Плавный переход цвета и нажатия */
+    transition: background-color 0.3s ease, transform 0.1s ease; 
 }
 
 #addDeviceBtn:hover {
-    background-color: #99a9ff; /* Светло-синий цвет при наведении */
+    background-color: #99a9ff; 
 }
 
 #addDeviceBtn:active {
     transform: translateY(2px);
-    background-color: #6271b6; /* Темный оттенок при нажатии */
+    background-color: #6271b6; 
 }
 
-/* Стили для кнопки Delete */
+
 .delete-btn {
-    background-color: #ff5555; /* Красный цвет */
+    background-color: #ff5555; 
     color: #ffffff;
     border: none;
     padding: 10px 15px;
@@ -113,16 +113,16 @@ tr:nth-child(even) {
 }
 
 .delete-btn:hover {
-    background-color: #ff7b7b; /* Светло-красный при наведении */
+    background-color: #ff7b7b; 
 }
 
 .delete-btn:active {
     transform: translateY(2px);
-    background-color: #ff4040; /* Темнее при нажатии */
+    background-color: #ff4040; 
 }
-/* Основные стили для кнопок */
+
 .edit-btn, .delete-btn {
-    background-color: #4CAF50; /* Зеленый цвет для Edit */
+    background-color: #4CAF50; 
     color: white;
     border: none;
     padding: 8px 12px;
@@ -133,28 +133,28 @@ tr:nth-child(even) {
 }
 
 .edit-btn:hover {
-    background-color: #45a049; /* Темнее при наведении */
+    background-color: #45a049; 
 }
 
 .delete-btn {
-    background-color: #f44336; /* Красный цвет для Delete */
+    background-color: #f44336; 
 }
 
 .delete-btn:hover {
-    background-color: #e53935; /* Темнее при наведении */
+    background-color: #e53935; 
 }
 
-/* Стили модального окна */
+
 .modal {
-    display: none; /* Скрыто по умолчанию */
+    display: none; 
     position: fixed;
-    z-index: 1; /* Поверх остальных элементов */
+    z-index: 1; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4); /* Затемненный фон */
+    background-color: rgba(0, 0, 0, 0.4); 
 }
 
 .modal-content {
@@ -173,7 +173,7 @@ tr:nth-child(even) {
     margin-bottom: 15px;
 }
 
-/* Стили кнопок в модальном окне */
+
 .confirm-btn {
     background-color: #f44336;
     color: white;
@@ -185,7 +185,7 @@ tr:nth-child(even) {
 }
 
 .confirm-btn:hover {
-    background-color: #d32f2f; /* Темнее при наведении */
+    background-color: #d32f2f; 
 }
 
 .cancel-btn {
@@ -199,17 +199,17 @@ tr:nth-child(even) {
 }
 
 .cancel-btn:hover {
-    background-color: #777777; /* Темнее при наведении */
-}
-/* Стили для активной редактируемой ячейки */
-.editing-cell {
-    animation: blink-animation 1s steps(5, start) infinite;
-    border: 2px solid #ff4d4d; /* Обводка для редактируемой ячейки */
+    background-color: #777777; 
 }
 
-/* Анимация для мигания */
+.editing-cell {
+    animation: blink-animation 1s steps(5, start) infinite;
+    border: 2px solid #ff4d4d; 
+}
+
+
 @keyframes blink-animation {
     50% {
-        background-color: rgba(255, 77, 77, 0.3); /* Светло-красный полупрозрачный цвет */
+        background-color: rgba(255, 77, 77, 0.3); 
     }
 }
