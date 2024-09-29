@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const context = signaturePad.getContext("2d");
     let drawing = false;
 
-    // Нумерация документов сохраняется в localStorage
+  
     let documentNumber = parseInt(localStorage.getItem('documentNumber')) || 1;
 
     const imageInputs = [
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("takePhoto8"),
     ];
 
-    const horizontalQuestions = [2, 3, 4, 5, 6, 7]; // Вопросы, которые должны содержать горизонтальные изображения
+    const horizontalQuestions = [2, 3, 4, 5, 6, 7]; 
 
     // Обработчики для каждого поля ввода
     imageInputs.forEach((input, index) => {
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         input.setAttribute("accept", "image/*");
     });
 
-    // Функция для проверки ориентации изображения и обновления кнопки
+   
     function validateImageOrientation(input, button) {
         if (input.files && input.files[0]) {
             const file = input.files[0];
@@ -57,10 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     const aspectRatio = img.width / img.height;
                     if (aspectRatio < 1) {
                         alert("Only horizontal images are allowed. Please upload a horizontal photo.");
-                        input.value = ""; // Очищаем значение input, если изображение вертикальное
-                        updateButtonState(input, button); // Обновляем состояние кнопки (красный цвет)
+                        input.value = ""; 
+                        updateButtonState(input, button); 
                     } else {
-                        updateButtonState(input, button); // Изображение горизонтальное — обновляем кнопку (зелёный цвет)
+                        updateButtonState(input, button); 
                     }
                 };
                 img.src = e.target.result;
@@ -69,18 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Функция для обновления состояния кнопки
+    
     function updateButtonState(input, button) {
         if (input.files && input.files.length > 0) {
-            button.style.backgroundColor = "green"; // Изображение добавлено — кнопка зелёная
+            button.style.backgroundColor = "green"; 
             button.classList.add("has-photo");
         } else {
-            button.style.backgroundColor = "red"; // Изображение не добавлено — кнопка красная
+            button.style.backgroundColor = "red"; 
             button.classList.remove("has-photo");
         }
     }
 
-    // События для подписи
+    
     signaturePad.addEventListener("mousedown", startDrawing);
     signaturePad.addEventListener("mouseup", stopDrawing);
     signaturePad.addEventListener("mousemove", draw);
@@ -127,23 +127,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const pageHeight = doc.internal.pageSize.getHeight();
         const pageWidth = doc.internal.pageSize.getWidth();
 
-        // Получение текущей даты и времени
+        
         const currentDate = new Date();
         const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}/${String(currentDate.getMonth() + 1).padStart(2, '0')}/${currentDate.getFullYear()}`;
         const formattedTime = `${String(currentDate.getHours()).padStart(2, '0')}:${String(currentDate.getMinutes()).padStart(2, '0')}`;
 
-        // Заголовок документа
+        
         const documentHeader = `Outshine 55\nNo.: ${String(documentNumber).padStart(3, '0')} Date: ${formattedDate} Time: ${formattedTime}`;
         const fileName = `Outshine_55_Report_No${String(documentNumber).padStart(3, '0')}_${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}_${String(currentDate.getHours()).padStart(2, '0')}-${String(currentDate.getMinutes()).padStart(2, '0')}.pdf`;
 
         documentNumber += 1;
         localStorage.setItem('documentNumber', documentNumber.toString());
 
-        // Заголовок
+        
         doc.setFontSize(14);
         doc.text(documentHeader, 10, 10);
 
-        // Двойная линия под шапкой
+        
         const lineYOffset = 20;
         doc.setLineWidth(0.5);
         doc.line(10, lineYOffset, pageWidth - 10, lineYOffset);
@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         saveAs(blob, fileName);
     });
 
-    // Функция для получения элемента input по индексу
+    
     function getFileInputByIndex(index) {
         switch (index) {
             case 0: return document.getElementById("screenPhoto1");
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Глобальное определение функции takePhoto
+    
     window.takePhoto = function(inputId) {
         const fileInput = document.getElementById(inputId);
         fileInput.setAttribute("capture", "camera");
