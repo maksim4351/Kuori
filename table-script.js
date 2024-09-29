@@ -1,12 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
     const tableBody = document.querySelector("#deviceTable tbody");
     const addDeviceBtn = document.getElementById("addDeviceBtn");
+    const GOOGLE_SHEETS_API_URL = "https://script.google.com/macros/s/AKfycbwKYePleoevwM0YtX0TcsovhZgceleh0OC7C-8j46LR9MQ2a75pvGmoVF7_eV-6YOnY-w/exec";
     let devices = [];
 
-    // Загружаем устройства из localStorage или файла при старте
-    loadDeviceListFromStorage();
+    loadDeviceListFromAPI();
 
-    // Обработчик добавления нового устройства
     addDeviceBtn.addEventListener("click", () => {
         const newDevice = {
             serialNumber: document.getElementById("serialNumber").value || "N/A",
@@ -21,44 +20,38 @@ document.addEventListener("DOMContentLoaded", () => {
         sortDevices();
         renderTable();
         document.getElementById("addDeviceForm").reset();
-        saveDeviceListToStorage();
+        saveDeviceToAPI(newDevice);
     });
 
-    // Обработчик для удаления строк
     tableBody.addEventListener("click", (event) => {
         if (event.target.classList.contains("delete-btn")) {
             const deleteIndex = event.target.closest("tr").getAttribute('data-id');
-            devices.splice(deleteIndex, 1); // Удаляем элемент из массива
+            const deleteDevice = devices[deleteIndex];
+            devices.splice(deleteIndex, 1);
             renderTable();
-            saveDeviceListToStorage();
+            deleteDeviceFromAPI(deleteDevice);
         }
-    });
 
-    // Переключение режима редактирования при нажатии кнопки Edit
-    tableBody.addEventListener("click", (event) => {
         if (event.target.classList.contains("edit-btn")) {
             const row = event.target.closest("tr").children;
             for (let i = 0; i < row.length - 1; i++) {
                 const cell = row[i];
                 cell.contentEditable = cell.contentEditable === "false" ? "true" : "false";
 
-                // Если редактирование включено, добавляем класс "editing-cell"
                 if (cell.contentEditable === "true") {
                     cell.classList.add("editing-cell");
                 } else {
                     cell.classList.remove("editing-cell");
                 }
             }
-            saveDeviceListToStorage();
+            updateDeviceInAPI(event.target.closest("tr"));
         }
     });
 
-    // Сортировка устройств по серийному номеру
     function sortDevices() {
         devices.sort((a, b) => (a.serialNumber > b.serialNumber ? 1 : -1));
     }
 
-    // Отображение таблицы на основе списка устройств
     function renderTable() {
         tableBody.innerHTML = "";
         devices.forEach((device, index) => {
@@ -79,30 +72,75 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Сохранение списка устройств в localStorage
-    function saveDeviceListToStorage() {
-        localStorage.setItem('deviceList', JSON.stringify(devices));
+    function saveDeviceToAPI(device) {
+        fetch(GOOGLE_SHEETS_API_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "add", device })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Device saved:", data);
+        })
+        .catch(error => {
+            console.error("Error saving device:", error);
+        });
     }
 
-    // Загрузка списка устройств из localStorage или из JSON-файла
-    function loadDeviceListFromStorage() {
-        // Загружаем из localStorage, если данные есть
-        const savedDevices = localStorage.getItem('deviceList');
-        if (savedDevices) {
-            devices = JSON.parse(savedDevices);
-            sortDevices();
-            renderTable();
-        } else {
-            // Если данных в localStorage нет, загружаем из файла JSON
-            fetch('device_list.json')
-                .then(response => response.json())
-                .then(data => {
-                    devices = data;
-                    sortDevices();
-                    renderTable();
-                    saveDeviceListToStorage(); // Сохраняем в localStorage для последующих сеансов
-                })
-                .catch(error => console.error("Error loading device list:", error));
-        }
+    function updateDeviceInAPI(row) {
+        const index = row.getAttribute('data-id');
+        const updatedDevice = {
+            serialNumber: row.children[0].textContent,
+            androidSerial: row.children[1].textContent,
+            address: row.children[2].textContent,
+            coordinates: row.children[3].textContent,
+            spare1: row.children[4].textContent,
+            spare2: row.children[5].textContent
+        };
+
+        fetch(GOOGLE_SHEETS_API_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "update", index, device: updatedDevice })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Device updated:", data);
+        })
+        .catch(error => {
+            console.error("Error updating device:", error);
+        });
+    }
+
+    function deleteDeviceFromAPI(device) {
+        fetch(GOOGLE_SHEETS_API_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "delete", serialNumber: device.serialNumber })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Device deleted:", data);
+        })
+        .catch(error => {
+            console.error("Error deleting device:", error);
+        });
+    }
+
+    function loadDeviceListFromAPI() {
+        fetch(GOOGLE_SHEETS_API_URL + "?action=read")
+            .then(response => response.json())
+            .then(data => {
+                devices = data.map(row => ({
+                    serialNumber: row[0],
+                    androidSerial: row[1],
+                    address: row[2],
+                    coordinates: row[3],
+                    spare1: row[4],
+                    spare2: row[5]
+                }));
+                sortDevices();
+                renderTable();
+            })
+            .catch(error => {
+                console.error("Error loading device list:", error);
+            });
     }
 });

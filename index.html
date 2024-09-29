@@ -7,11 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-	
 </head>
 <body>
     <div class="container">
-        <!-- Ссылка на страницу списка устройств вверху -->
         <div class="top-nav">
             <a href="device-list.html" class="nav-link">Device List</a>
         </div>
@@ -19,7 +17,6 @@
         <h1>Service Report Form</h1>
         <h2>Fill in the details and generate your report</h2>
 
-        <!-- Ввод полей для вопросов с кнопками Take Photo -->
         <div class="input-group">
             <label for="screenPhoto1">1. Photo of the first side of the screen before servicing:</label>
             <div class="button-container">
@@ -84,7 +81,6 @@
             </div>
         </div>
 
-        <!-- Текстовые поля для вопросов 9, 10 и 11 -->
         <div class="input-group">
             <label for="detectedIssues">9. Detected issues:</label>
             <textarea id="detectedIssues" placeholder="Describe any detected issues..."></textarea>
@@ -100,21 +96,17 @@
             <input type="text" id="employeeName" placeholder="Enter your name...">
         </div>
 
-        <!-- Поле и кнопка для подписи -->
         <div id="signatureContainer" class="input-group">
-    <label>12. Signature:</label>
-    <br>
-    <canvas id="signaturePad" width="500" height="200"></canvas>
-    <br>
-    <div class="button-container">
-        <button id="clearSignature" class="clear-signature-btn">Clear Signature</button>
-    </div>
-</div>
+            <label>12. Signature:</label>
+            <br>
+            <canvas id="signaturePad" width="500" height="200"></canvas>
+            <br>
+            <div class="button-container">
+                <button id="clearSignature" class="clear-signature-btn">Clear Signature</button>
+            </div>
+        </div>
 
-        <!-- Кнопка сохранения PDF -->
-        <!-- Кнопка сохранения PDF -->
-<button id="savePdfBtn" class="save-pdf-btn">Save PDF Report</button>
-<!-- Ссылка на страницу списка устройств внизу -->
+        <button id="savePdfBtn" class="save-pdf-btn">Save PDF Report</button>
         <div class="bottom-nav">
             <a href="device-list.html" class="nav-link">Device List</a>
         </div>
