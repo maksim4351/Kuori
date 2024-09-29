@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const horizontalQuestions = [2, 3, 4, 5, 6, 7]; 
 
-    // Обработчики для каждого поля ввода
+   
     imageInputs.forEach((input, index) => {
         const button = takePhotoButtons[index];
         if (horizontalQuestions.includes(index)) {
