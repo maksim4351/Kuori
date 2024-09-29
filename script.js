@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questions = [
             "1. Photo of the first side of the screen before servicing",
             "2. Photo of the second side of the screen before servicing",
-            "3. Photo of the device serial number (must include an asterisk)",
+            "3. Photo of the device serial number",
             "4. Photo of the electronic box",
             "5. Photo of the Android system",
             "6. Photo of the SMB",
