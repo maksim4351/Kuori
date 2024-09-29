@@ -75,7 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function saveDeviceToAPI(device) {
         fetch(GOOGLE_SHEETS_API_URL, {
             method: "POST",
-            body: JSON.stringify({ action: "add", device })
+            body: JSON.stringify({ action: "add", device }),
+            headers: { 'Content-Type': 'application/json' }
         })
         .then(response => response.json())
         .then(data => {
@@ -99,7 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         fetch(GOOGLE_SHEETS_API_URL, {
             method: "POST",
-            body: JSON.stringify({ action: "update", index, device: updatedDevice })
+            body: JSON.stringify({ action: "update", index, device: updatedDevice }),
+            headers: { 'Content-Type': 'application/json' }
         })
         .then(response => response.json())
         .then(data => {
@@ -113,7 +115,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function deleteDeviceFromAPI(device) {
         fetch(GOOGLE_SHEETS_API_URL, {
             method: "POST",
-            body: JSON.stringify({ action: "delete", serialNumber: device.serialNumber })
+            body: JSON.stringify({ action: "delete", serialNumber: device.serialNumber }),
+            headers: { 'Content-Type': 'application/json' }
         })
         .then(response => response.json())
         .then(data => {
