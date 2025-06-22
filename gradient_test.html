@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="gradient-area" style="width: 100vw; height: 100vh; cursor: pointer;"></div>
+    <div class="instructions-overlay">
+        <p>Click anywhere to cycle through gradients.</p>
+        <p>Press ESC to exit.</p>
+    </div>
+    <script>
+        const gradientArea = document.getElementById('gradient-area');
+        const gradients = [
+            'linear-gradient(to right, #000, #fff)',
+            'linear-gradient(to right, #f00, #0f0, #00f)',
+            'linear-gradient(to right, #ff0000, #000000)',
+            'linear-gradient(to right, #00ff00, #000000)',
+            'linear-gradient(to right, #0000ff, #000000)'
+        ];
+        let currentIndex = 0;
+
+        function changeGradient() {
+            gradientArea.style.background = gradients[currentIndex];
+            currentIndex = (currentIndex + 1) % gradients.length;
+        }
+
+        // Initial state
+        changeGradient();
+
+        gradientArea.addEventListener('click', changeGradient);
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+    <!-- Используем те же стили, что и в dead_pixel_test.html -->
+    <style>
+        body { margin: 0; overflow: hidden; }
+        .instructions-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #gradient-area:active + .instructions-overlay {
+            opacity: 0;
+        }
+    </style>
+</body>
+</html> 

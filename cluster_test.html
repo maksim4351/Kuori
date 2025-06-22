@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cluster Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="test-container" id="testContainer">
+        <div id="testOverlay" class="test-overlay">T E S T</div>
+        <button id="startTest" class="btn">Start Cluster Test</button>
+        <div id="controls" class="button-group" style="display: none;">
+            <a href="dashboard.html" class="btn">Back to Dashboard</a>
+        </div>
+    </div>
+    <script>
+        const patterns = [
+            "linear-gradient(to right, black 50%, white 50%)", // Vertical stripes
+            "linear-gradient(to bottom, black 50%, white 50%)", // Horizontal stripes
+            "repeating-linear-gradient(45deg, black, black 25px, white 25px, white 50px)" // Checkerboard
+        ];
+        let currentPattern = 0;
+        let patternInterval;
+        let moveInterval;
+        let isPaused = false;
+
+        const testContainer = document.getElementById("testContainer");
+        const startTestButton = document.getElementById("startTest");
+        const controls = document.getElementById("controls");
+        const testOverlay = document.getElementById("testOverlay");
+
+        function moveOverlay() {
+            if (!testOverlay || !document.fullscreenElement) return;
+            const containerRect = testContainer.getBoundingClientRect();
+            const overlayRect = testOverlay.getBoundingClientRect();
+            if (containerRect.width === 0) return;
+            const maxX = containerRect.width - overlayRect.width;
+            const maxY = containerRect.height - overlayRect.height;
+            testOverlay.style.left = `${Math.random() * maxX}px`;
+            testOverlay.style.top = `${Math.random() * maxY}px`;
+        }
+
+        function changePattern(index) {
+            testContainer.style.background = patterns[index];
+            testContainer.style.backgroundSize = "50px 50px";
+        }
+
+        function stopTest() {
+            if (patternInterval) clearInterval(patternInterval);
+            if (moveInterval) clearInterval(moveInterval);
+            patternInterval = moveInterval = null;
+            isPaused = false;
+            currentPattern = 0;
+            testContainer.style.background = "#1e1e1e";
+            startTestButton.style.display = "none";
+            controls.style.display = "flex";
+            testOverlay.style.opacity = 0;
+        }
+
+        startTestButton.addEventListener("click", () => {
+            startTestButton.style.display = "none";
+            controls.style.display = "none";
+            testContainer.requestFullscreen();
+        });
+
+        document.addEventListener("fullscreenchange", () => {
+            if (document.fullscreenElement) {
+                testOverlay.style.opacity = 1;
+                testOverlay.style.color = "rgba(128, 128, 128, 0.075)";
+                changePattern(currentPattern);
+                moveOverlay();
+                patternInterval = setInterval(() => {
+                    if (!isPaused) {
+                        currentPattern = (currentPattern + 1) % patterns.length;
+                        changePattern(currentPattern);
+                    }
+                }, 3000);
+                moveInterval = setInterval(moveOverlay, 5000);
+            } else {
+                if (patternInterval) stopTest();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (!patternInterval) return;
+            if (event.code === "ArrowRight") {
+                currentPattern = (currentPattern + 1) % patterns.length;
+                changePattern(currentPattern);
+            } else if (event.code === "ArrowLeft") {
+                currentPattern = (currentPattern - 1 + patterns.length) % patterns.length;
+                changePattern(currentPattern);
+            } else if (event.code === "Space") {
+                isPaused = !isPaused;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="dashboard-container-split">
+        <!-- Left Column: Buttons -->
+        <div class="button-column">
+            <h1>Monitor Test Dashboard</h1>
+            <p>Select a test to start:</p>
+            <div class="button-group">
+                <a href="color_test.html" class="btn">Color Test</a>
+                <a href="cluster_test.html" class="btn">Cluster Test</a>
+                <a href="latency_test.html" class="btn">Latency Test</a>
+                <a href="view_angle.html" class="btn">View Angle Test</a>
+                <a href="dead_pixel_test.html" class="btn">Dead Pixel Test</a>
+                <a href="gradient_test.html" class="btn">Gradient Test</a>
+                <a href="gpu_stress_test.html" class="btn">GPU Stress Test</a>
+                <a href="screen_info.html" class="btn">Screen Info (Details)</a>
+            </div>
+        </div>
+
+        <!-- Right Column: Info -->
+        <div class="info-column">
+            <div class="info-box">
+                <h2>Screen Information</h2>
+                <p><strong>Total Resolution:</strong> <span id="total-resolution"></span></p>
+                <p><strong>Available Resolution:</strong> <span id="available-resolution"></span></p>
+                <p><strong>Resolution Category:</strong> <span id="resolution-category"></span></p>
+                <p><strong>Aspect Ratio:</strong> <span id="aspect-ratio"></span></p>
+                <p><strong>Pixel Ratio:</strong> <span id="pixel-ratio"></span></p>
+                <p><strong>Est. Refresh Rate:</strong> <span id="refresh-rate">Calculating...</span></p>
+                <p><strong>Color Depth:</strong> <span id="color-depth"></span></p>
+                <p><strong>Screen Orientation:</strong> <span id="orientation"></span></p>
+                <p><strong>HDR Support:</strong> <span id="hdr-support"></span></p>
+                <p><strong>Touch Support:</strong> <span id="touch-support"></span></p>
+            </div>
+            <div class="info-box">
+                <h2>GPU Information</h2>
+                <p><strong>GPU:</strong> <span id="gpu-renderer">Detecting...</span></p>
+                <div id="gpu-performance-results" style="display: none;">
+                    <p><strong>Objects Tested:</strong> <span id="objects-tested"></span></p>
+                    <p><strong>Performance:</strong> <span id="performance-status" style="font-weight: bold;"></span></p>
+                    <p><strong>FPS:</strong> Avg: <span id="avg-fps"></span>, Min: <span id="min-fps"></span></p>
+                </div>
+                <a href="gpu_stress_test.html?run_check=true" id="check-gpu-btn" class="btn" style="width: 100%; margin-top: 15px; text-align: center; box-sizing: border-box;">
+                    Check Performance
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="three.min.js"></script>
+    <script>
+        // --- Screen Info Logic ---
+        function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+        function getResolutionCategory(width) {
+            if (width >= 7680) return "8K UHD";
+            if (width >= 3840) return "4K UHD";
+            if (width >= 2560) return "QHD (1440p)";
+            if (width >= 1920) return "Full HD (1080p)";
+            if (width >= 1280) return "HD (720p)";
+            return "Standard Definition";
+        }
+
+        function getScreenInfo() {
+            const s = window.screen;
+            const w = s.width;
+            const h = s.height;
+            const commonDivisor = gcd(w, h);
+            document.getElementById("total-resolution").textContent = `${w} x ${h}px`;
+            document.getElementById("available-resolution").textContent = `${s.availWidth} x ${s.availHeight}px`;
+            document.getElementById("resolution-category").textContent = getResolutionCategory(w);
+            document.getElementById("aspect-ratio").textContent = `${w / commonDivisor}:${h / commonDivisor}`;
+            document.getElementById("color-depth").textContent = `${s.colorDepth}-bit`;
+            document.getElementById("pixel-ratio").textContent = window.devicePixelRatio || 1;
+            document.getElementById("orientation").textContent = (s.orientation ? s.orientation.type : 'N/A').replace('-primary', '');
+
+            const hdrMatch = window.matchMedia('(dynamic-range: high)');
+            document.getElementById('hdr-support').textContent = hdrMatch.matches ? 'Supported' : 'Not Supported / Unknown';
+            document.getElementById('touch-support').textContent = navigator.maxTouchPoints > 0 ? `Yes (${navigator.maxTouchPoints} points)` : 'No';
+        }
+        
+        // --- GPU Info Logic ---
+        function getGpuInfo() {
+            try {
+                const renderer = new THREE.WebGLRenderer();
+                const gl = renderer.getContext();
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                document.getElementById('gpu-renderer').textContent = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                renderer.forceContextLoss(); // Clean up context
+            } catch (e) {
+                document.getElementById('gpu-renderer').textContent = "Could not detect GPU";
+            }
+        }
+
+        // --- Performance Check Result Logic ---
+        function displayGpuResults() {
+            const checkBtn = document.getElementById('check-gpu-btn');
+            const results = sessionStorage.getItem('gpuCheckResults');
+            if (results) {
+                const { objects, avg, min, status, statusColor } = JSON.parse(results);
+                
+                document.getElementById('objects-tested').textContent = objects;
+                document.getElementById('avg-fps').textContent = avg;
+                document.getElementById('min-fps').textContent = min;
+                const perfStatus = document.getElementById('performance-status');
+                perfStatus.textContent = status;
+                perfStatus.style.color = statusColor;
+
+                document.getElementById('gpu-performance-results').style.display = 'block';
+                checkBtn.textContent = 'Check Again';
+                checkBtn.classList.remove('btn-danger'); // Ensure button is not red
+                
+                sessionStorage.removeItem('gpuCheckResults'); // Clean up
+            } else {
+                // No results, make button red
+                checkBtn.classList.add('btn-danger');
+            }
+        }
+
+        function getRefreshRate(callback) {
+            const timestamps = [];
+            const sampleCount = 120;
+
+            function tick(timestamp) {
+                if (timestamps.length > 0) {
+                    const lastTimestamp = timestamps[timestamps.length - 1];
+                    timestamps.push(timestamp - lastTimestamp);
+                }
+                timestamps.push(performance.now());
+
+                if (timestamps.length < sampleCount) {
+                    requestAnimationFrame(tick);
+                } else {
+                    timestamps.shift();
+                    const totalDuration = timestamps[timestamps.length - 1] - timestamps[0];
+                    const avgTimePerFrame = totalDuration / (timestamps.length -1);
+                    const rate = Math.round(1000 / avgTimePerFrame);
+                    callback(rate);
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // --- Run on Load ---
+        getScreenInfo();
+        getGpuInfo();
+        displayGpuResults();
+        getRefreshRate((rate) => {
+            document.getElementById('refresh-rate').textContent = `${rate} Hz (Estimated)`;
+        });
+    </script>
+</body>
+</html>

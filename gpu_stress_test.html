@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Stress Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="info">
+        GPU Stress Test<br/>
+        <span id="gpu-renderer">Detecting GPU...</span><br/><br/>
+        Objects: <span id="objects-count">0</span><br/>
+        FPS: <span id="fps">--</span> (Avg: <span id="avg-fps">--</span>, Min: <span id="min-fps">--</span>)<br/>
+        Performance: <span id="performance-status" style="font-weight: bold;">--</span>
+    </div>
+    <a href="dashboard.html" id="back-btn" class="btn" style="position: absolute; top: 20px; right: 20px; z-index: 10;">Back to Dashboard</a>
+    <script src="three.min.js"></script>
+    <script>
+        // --- Config ---
+        const AUTO_TEST_DURATION = 3000; // 3 seconds
+        const AUTO_TEST_OBJECT_COUNT = 700;
+
+        // --- Global Vars ---
+        let scene, camera, renderer, cubes;
+        let lastTime = performance.now();
+        let frameCount = 0;
+        const fpsSamples = [];
+        
+        // --- FPS Stats ---
+        let minFps = Infinity;
+        let totalFps = 0;
+        let frameSamples = 0;
+
+        // --- DOM Elements ---
+        const objectsCountSpan = document.getElementById('objects-count');
+        const fpsSpan = document.getElementById('fps');
+        const avgFpsSpan = document.getElementById('avg-fps');
+        const minFpsSpan = document.getElementById('min-fps');
+        const performanceSpan = document.getElementById('performance-status');
+        const gpuRendererSpan = document.getElementById('gpu-renderer');
+        const infoDiv = document.getElementById('info');
+        const backBtn = document.getElementById('back-btn');
+
+        // --- Main Logic ---
+        function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isAutoCheck = urlParams.get('run_check') === 'true';
+
+            setupScene();
+
+            if (isAutoCheck) {
+                runAutoCheck();
+            } else {
+                runInteractiveTest();
+            }
+            
+            animate();
+        }
+
+        function setupScene() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            try {
+                const gl = renderer.getContext();
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                gpuRendererSpan.textContent = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            } catch (e) {
+                gpuRendererSpan.textContent = "Could not detect GPU";
+            }
+            camera.position.z = 30;
+        }
+
+        function runAutoCheck() {
+            infoDiv.innerHTML = "Running automated performance check...";
+            backBtn.style.display = 'none';
+
+            const geometry = new THREE.BoxGeometry();
+            cubes = [];
+            for (let i = 0; i < AUTO_TEST_OBJECT_COUNT; i++) {
+                addCube(geometry);
+            }
+            objectsCountSpan.textContent = cubes.length;
+
+            setInterval(() => {
+                fpsSamples.push(frameCount * 4); // Calculate FPS every 250ms
+                frameCount = 0;
+            }, 250);
+
+            setTimeout(finishAutoCheck, AUTO_TEST_DURATION);
+        }
+
+        function finishAutoCheck() {
+            if (fpsSamples.length > 1) fpsSamples.shift(); // Remove first sample
+            const avg = Math.round(fpsSamples.reduce((s, v) => s + v, 0) / fpsSamples.length);
+            const min = Math.min(...fpsSamples);
+
+            let status = 'Poor', statusColor = '#F44336';
+            if (avg >= 58) { status = 'Excellent'; statusColor = '#4CAF50'; }
+            else if (avg >= 30) { status = 'Good'; statusColor = '#FFC107'; }
+            
+            const results = { objects: AUTO_TEST_OBJECT_COUNT, avg, min, status, statusColor };
+            sessionStorage.setItem('gpuCheckResults', JSON.stringify(results));
+            window.location.href = 'dashboard.html';
+        }
+
+        function runInteractiveTest() {
+            const geometry = new THREE.BoxGeometry();
+            cubes = [];
+            for (let i = 0; i < 500; i++) { addCube(geometry); }
+            objectsCountSpan.textContent = cubes.length;
+            
+            document.addEventListener('click', () => {
+                for (let i = 0; i < 100; i++) { addCube(geometry); }
+                objectsCountSpan.textContent = cubes.length;
+            });
+        }
+        
+        function addCube(geometry) {
+            const material = new THREE.MeshNormalMaterial();
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20);
+            scene.add(cube);
+            cubes.push(cube);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            frameCount++;
+
+            const now = performance.now();
+            if (now >= lastTime + 1000) {
+                const fps = frameCount;
+                if(avgFpsSpan) { // Only update if in interactive mode
+                    fpsSpan.textContent = fps;
+                    minFps = Math.min(minFps, fps);
+                    totalFps += fps;
+                    frameSamples++;
+                    minFpsSpan.textContent = minFps;
+                    avgFpsSpan.textContent = Math.round(totalFps / frameSamples);
+                    if (fps >= 58) { performanceSpan.textContent = 'Excellent'; performanceSpan.style.color = '#4CAF50'; }
+                    else if (fps >= 30) { performanceSpan.textContent = 'Good'; performanceSpan.style.color = '#FFC107'; }
+                    else { performanceSpan.textContent = 'Poor'; performanceSpan.style.color = '#F44336'; }
+                }
+                frameCount = 0;
+                lastTime = now;
+            }
+
+            cubes.forEach(cube => {
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+            });
+            renderer.render(scene, camera);
+        }
+
+        init();
+    </script>
+</body>
+<style>
+    body { margin: 0; overflow: hidden; background-color: #000; }
+    #info {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        background-color: rgba(0,0,0,0.5);
+        padding: 10px;
+        border-radius: 5px;
+        min-width: 250px;
+    }
+</style>
+</html> 

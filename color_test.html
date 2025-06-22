@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="test-container" id="testContainer">
+        <div id="testOverlay" class="test-overlay">T E S T</div>
+        <button id="startTest" class="btn">Start Test</button>
+        <div id="controls" class="button-group" style="display: none;">
+            <a href="dashboard.html" class="btn">Back to Dashboard</a>
+        </div>
+    </div>
+    <script>
+        const colors = [
+            { bg: "#FFFFFF", text: "rgba(0, 0, 0, 0.075)" },
+            { bg: "#0000FF", text: "rgba(255, 255, 255, 0.075)" },
+            { bg: "#000000", text: "rgba(255, 255, 255, 0.075)" },
+            { bg: "url('high_resolution_image.jpg')", text: "rgba(255, 255, 255, 0.075)" }
+        ];
+        let currentIndex = 0;
+        let colorInterval;
+        let moveInterval;
+        let isPaused = false;
+
+        const testContainer = document.getElementById("testContainer");
+        const startTestButton = document.getElementById("startTest");
+        const controls = document.getElementById("controls");
+        const testOverlay = document.getElementById("testOverlay");
+
+        function moveOverlay() {
+            if (!testOverlay || !document.fullscreenElement) return;
+            const containerRect = testContainer.getBoundingClientRect();
+            const overlayRect = testOverlay.getBoundingClientRect();
+            if (containerRect.width === 0) return;
+            const maxX = containerRect.width - overlayRect.width;
+            const maxY = containerRect.height - overlayRect.height;
+            testOverlay.style.left = `${Math.random() * maxX}px`;
+            testOverlay.style.top = `${Math.random() * maxY}px`;
+        }
+
+        function changeDisplay(index) {
+            const current = colors[index];
+            testOverlay.style.color = current.text;
+            if (current.bg.startsWith("url")) {
+                testContainer.style.background = current.bg;
+                testContainer.style.backgroundSize = "cover";
+                testContainer.style.backgroundPosition = "center";
+            } else {
+                testContainer.style.background = current.bg;
+            }
+        }
+
+        function stopTest() {
+            if (colorInterval) clearInterval(colorInterval);
+            if (moveInterval) clearInterval(moveInterval);
+            colorInterval = moveInterval = null;
+            isPaused = false;
+            currentIndex = 0;
+            testContainer.style.background = "#1e1e1e";
+            startTestButton.style.display = "none";
+            controls.style.display = "flex";
+            testOverlay.style.opacity = 0;
+        }
+
+        startTestButton.addEventListener("click", () => {
+            startTestButton.style.display = "none";
+            controls.style.display = "none";
+            testContainer.requestFullscreen();
+        });
+
+        document.addEventListener("fullscreenchange", () => {
+            if (document.fullscreenElement) {
+                testOverlay.style.opacity = 1;
+                changeDisplay(currentIndex);
+                moveOverlay();
+                colorInterval = setInterval(() => {
+                    if (!isPaused) {
+                        currentIndex = (currentIndex + 1) % colors.length;
+                        changeDisplay(currentIndex);
+                    }
+                }, 5000);
+                moveInterval = setInterval(moveOverlay, 5000);
+            } else {
+                if (colorInterval) stopTest();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (!colorInterval) return;
+            if (event.code === "ArrowRight") {
+                currentIndex = (currentIndex + 1) % colors.length;
+                changeDisplay(currentIndex);
+            } else if (event.code === "ArrowLeft") {
+                currentIndex = (currentIndex - 1 + colors.length) % colors.length;
+                changeDisplay(currentIndex);
+            } else if (event.code === "Space") {
+                isPaused = !isPaused;
+            }
+        });
+    </script>
+</body>
+</html>

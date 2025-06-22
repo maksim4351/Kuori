@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Information</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="info-container">
+        <h1>Screen Information</h1>
+        <div class="screen-info">
+            <p><strong>Total Resolution:</strong> <span id="total-resolution"></span></p>
+            <p><strong>Resolution Category:</strong> <span id="resolution-category"></span></p>
+            <p><strong>Available Resolution:</strong> <span id="available-resolution"></span></p>
+            <p><strong>Aspect Ratio:</strong> <span id="aspect-ratio"></span></p>
+            <p><strong>Device Pixel Ratio:</strong> <span id="pixel-ratio"></span></p>
+            <p><strong>Color Depth:</strong> <span id="color-depth"></span></p>
+            <p><strong>Screen Orientation:</strong> <span id="orientation"></span></p>
+            <p><strong>HDR Support:</strong> <span id="hdr-support"></span></p>
+            <p><strong>Touch Support:</strong> <span id="touch-support"></span></p>
+            <p><strong>Est. Refresh Rate:</strong> <span id="refresh-rate">Calculating...</span></p>
+        </div>
+        <div class="instructions">
+            <h2>How to Use This Website</h2>
+            <ol>
+                <li>To start a test, choose one from the dashboard.</li>
+                <li>Use the following controls during the tests:
+                    <ul>
+                        <li><strong>Right Arrow (→):</strong> Move to the next screen or pattern.</li>
+                        <li><strong>Left Arrow (←):</strong> Go back to the previous screen or pattern.</li>
+                        <li><strong>Spacebar:</strong> Pause or resume automatic transitions.</li>
+                        <li><strong>Esc:</strong> Exit fullscreen mode.</li>
+                    </ul>
+                </li>
+                <li>Follow the on-screen instructions for each test to ensure accurate results.</li>
+                <li>To return to the main menu, press "Back to Dashboard."</li>
+            </ol>
+        </div>
+        <a href="dashboard.html" class="btn">Back to Dashboard</a>
+    </div>
+    <script>
+        // Helper to find the greatest common divisor for aspect ratio
+        function gcd(a, b) {
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        // Helper to get resolution category
+        function getResolutionCategory(width) {
+            if (width >= 7680) return "8K UHD";
+            if (width >= 3840) return "4K UHD";
+            if (width >= 2560) return "QHD (1440p)";
+            if (width >= 1920) return "Full HD (1080p)";
+            if (width >= 1280) return "HD (720p)";
+            return "Standard Definition";
+        }
+
+        function getScreenInfo() {
+            const s = window.screen;
+            const w = s.width;
+            const h = s.height;
+            const commonDivisor = gcd(w, h);
+
+            document.getElementById("total-resolution").textContent = `${w} x ${h} pixels`;
+            document.getElementById("resolution-category").textContent = getResolutionCategory(w);
+            document.getElementById("available-resolution").textContent = `${s.availWidth} x ${s.availHeight} pixels`;
+            document.getElementById("aspect-ratio").textContent = `${w / commonDivisor}:${h / commonDivisor}`;
+            document.getElementById("pixel-ratio").textContent = window.devicePixelRatio || 1;
+            document.getElementById("color-depth").textContent = `${s.colorDepth}-bit`;
+            document.getElementById("orientation").textContent = (s.orientation ? s.orientation.type : 'N/A').replace('-primary', '');
+            
+            const hdrMatch = window.matchMedia('(dynamic-range: high)');
+            document.getElementById('hdr-support').textContent = hdrMatch.matches ? 'Supported' : 'Not Supported / Unknown';
+            document.getElementById('touch-support').textContent = navigator.maxTouchPoints > 0 ? `Yes (${navigator.maxTouchPoints} touch points)` : 'No';
+        }
+
+        function getRefreshRate(callback) {
+            const timestamps = [];
+            const sampleCount = 120; // Number of frames to sample
+
+            function tick(timestamp) {
+                if (timestamps.length > 0) {
+                    const lastTimestamp = timestamps[timestamps.length - 1];
+                    timestamps.push(timestamp - lastTimestamp);
+                }
+                timestamps.push(performance.now()); // Start with a baseline
+
+                if (timestamps.length < sampleCount) {
+                    requestAnimationFrame(tick);
+                } else {
+                    timestamps.shift(); // Remove the initial baseline timestamp
+                    const totalDuration = timestamps[timestamps.length - 1] - timestamps[0];
+                    const avgTimePerFrame = totalDuration / (timestamps.length -1);
+                    const rate = Math.round(1000 / avgTimePerFrame);
+                    callback(rate);
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+
+        // Initial call
+        getScreenInfo();
+        getRefreshRate((rate) => {
+            document.getElementById('refresh-rate').textContent = `${rate} Hz (Estimated)`;
+        });
+
+        // Update on orientation change
+        window.addEventListener("orientationchange", getScreenInfo);
+    </script>
+</body>
+</html>
